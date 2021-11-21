@@ -4,8 +4,9 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var passport = require("passport");
 var LocalStrategy = require("passport-local");
-var passportLocalMongoose = require("passport-local-mongoose");
 var path = require("path");
+var User = require("./models/user");
+var Web = require("./models/web");
 
 mongoose.connect("mongodb+srv://Karthik:IIdkw31ETaH8YqxN@cluster0.n0d7n.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
     useNewUrlParser: true,
@@ -19,15 +20,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static(path.join(__dirname + "/public")));
 app.set('view engine', 'ejs');
-
-// AUTHENTICATION SCHEMA
-var UserSchema = new mongoose.Schema({
-    username: String,
-    password: String
-});
-
-UserSchema.plugin(passportLocalMongoose);
-var User = mongoose.model("User", UserSchema);
 
 // AUTHENTICATION PASSPORT CONFIGURATION
 app.use(require("express-session")({
