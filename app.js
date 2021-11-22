@@ -67,9 +67,35 @@ app.get("/login", function(req, res) {
 });
 
 app.post("/login", passport.authenticate("local", {
-        successRedirect: "/",
+        successRedirect: "/web",
         failureRedirect: "/login"
-    }), function(req, res) {
+    }), function(req, res) {}
+);
+
+app.get("/web", isLoggedIn, function(req, res) {
+    res.render("web");
+});
+
+app.post("/web", isLoggedIn, function(req, res) {
+    var email = req.body.email;
+    var website = req.body.website;
+    var user = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newWeb = {email: email, websiteUrl: website, user: user};
+    Web.create(newWeb, function(err, newlyAddedWeb) {
+        if(err) {
+            console.error(err);
+        }
+        else {
+            res.redirect("/success");
+        }
+    });
+});
+
+app.get("/success", function(req, res) {
+    res.render("success");
 });
 
 function isLoggedIn(req, res, next) {
